@@ -28,8 +28,7 @@ public class GameController : MonoBehaviour
 
     public bool isVsAI = true;
 
-    public enum Difficulty { Easy, Medium, Hard }
-    public Difficulty aiDifficulty = Difficulty.Medium;
+    private GameSettings.Difficulty aiDifficulty = GameSettings.Difficulty.Medium;
 
     public void OnCellClicked(int index)
     {
@@ -88,13 +87,13 @@ public class GameController : MonoBehaviour
 
         switch (aiDifficulty)
         {
-            case Difficulty.Easy:
+            case GameSettings.Difficulty.Easy:
                 move = PlayRandomMove();
                 break;
-            case Difficulty.Medium:
+            case GameSettings.Difficulty.Medium:
                 move = PlaySmartMove();
                 break;
-            case Difficulty.Hard:
+            case GameSettings.Difficulty.Hard:
                 move = PlayBestMove();
                 break;
         }
@@ -302,6 +301,19 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        // Carrega configurações do GameSettings, se disponíveis
+        if (GameSettings.Instance != null)
+        {
+            isVsAI = GameSettings.Instance.PlayAgainstAI;
+            aiDifficulty = GameSettings.Instance.SelectedDifficulty;
+        }
+        else
+        {
+            // fallback para testes direto no editor
+            isVsAI = true;
+            aiDifficulty = GameSettings.Difficulty.Medium;
+        }
+
         UpdateTurnUI();
         UpdateScoreUI();
         restartButton.gameObject.SetActive(true);
@@ -309,6 +321,7 @@ public class GameController : MonoBehaviour
         if (!turnX && isVsAI)
             Invoke(nameof(PlayAI), 0.5f);
     }
+
 
     private void HighlightWinner(string player)
     {
