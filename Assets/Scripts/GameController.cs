@@ -222,7 +222,7 @@ public class GameController : MonoBehaviour
         UpdateTurnUI();
         endText.text = $"Rodada {round}";
 
-        if (!turnX && isVsAI)
+        if (!turnX && GameSettings.Instance.PlayAgainstAI == true)
             Invoke(nameof(PlayAI), 0.5f);
     }
 
@@ -293,9 +293,9 @@ public class GameController : MonoBehaviour
         UpdateScoreUI();
         UpdateTurnUI();
         endText.text = "";
-        restartButton.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(true);
 
-        if (!turnX && isVsAI)
+        if (!turnX && GameSettings.Instance.PlayAgainstAI == true)
             Invoke(nameof(PlayAI), 0.5f);
     }
 
@@ -304,7 +304,7 @@ public class GameController : MonoBehaviour
         // Carrega configurações do GameSettings, se disponíveis
         if (GameSettings.Instance != null)
         {
-            isVsAI = GameSettings.Instance.PlayAgainstAI;
+            isVsAI = GameSettings.Instance.PlayAgainstAI == true;
             aiDifficulty = GameSettings.Instance.SelectedDifficulty;
         }
         else
@@ -318,7 +318,7 @@ public class GameController : MonoBehaviour
         UpdateScoreUI();
         restartButton.gameObject.SetActive(true);
 
-        if (!turnX && isVsAI)
+        if (!turnX && GameSettings.Instance.PlayAgainstAI == true)
             Invoke(nameof(PlayAI), 0.5f);
     }
 
