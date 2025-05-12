@@ -4,9 +4,9 @@ public class GameSettings : MonoBehaviour
 {
     public static GameSettings Instance;
 
-    public enum Difficulty { Easy, Medium, Hard }
-    public Difficulty SelectedDifficulty = Difficulty.Medium;
-    public bool PlayAgainstAI = true;
+    public enum Difficulty { None, Easy, Medium, Hard }
+    public Difficulty SelectedDifficulty = Difficulty.None;
+    public bool? PlayAgainstAI = null;
 
     void Awake()
     {
