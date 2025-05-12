@@ -7,10 +7,8 @@ public class GameController : MonoBehaviour
 {
     public Sprite xSprite;
     public Sprite oSprite;
-    public List<Image> cellImages;
+    public List<Image> symbolImages; // imagem interna (X ou O)
 
-    public TMP_Text labelX;
-    public TMP_Text labelO;
     public TMP_Text endText;
     public TMP_Text scoreTextX;
     public TMP_Text scoreTextO;
@@ -24,7 +22,6 @@ public class GameController : MonoBehaviour
     private int scoreX = 0;
     private int scoreO = 0;
     private int round = 1;
-    private int maxRounds = 3;
 
     public bool isVsAI = true;
 
@@ -36,9 +33,9 @@ public class GameController : MonoBehaviour
             return;
 
         board[index] = turnX ? "X" : "O";
-        cellImages[index].sprite = turnX ? xSprite : oSprite;
+        symbolImages[index].sprite = turnX ? xSprite : oSprite;
 
-        Button button = cellImages[index].transform.parent.GetComponent<Button>();
+        Button button = symbolImages[index].transform.parent.GetComponent<Button>();
         if (button != null)
             button.interactable = false;
 
@@ -73,7 +70,6 @@ public class GameController : MonoBehaviour
         }
 
         turnX = !turnX;
-        UpdateTurnUI();
 
         if (!gameOver && !turnX && isVsAI)
         {
@@ -203,26 +199,24 @@ public class GameController : MonoBehaviour
 
     private void StartNextRound()
     {
-        round++;
-
-        if (round > maxRounds)
+        if (scoreX == 2)
         {
-            if (scoreX > scoreO)
-                endText.text = $"Jogador X venceu a melhor de 3!";
-            else if (scoreO > scoreX)
-                endText.text = $"Jogador O venceu a melhor de 3!";
-            else
-                endText.text = "Empate na melhor de 3!";
-
+            endText.text = $"Jogador X venceu a melhor de 3!";
+            restartButton.gameObject.SetActive(true);
+            return;
+        }
+        else if (scoreO == 2)
+        {
+            endText.text = $"Jogador O venceu a melhor de 3!";
             restartButton.gameObject.SetActive(true);
             return;
         }
 
+        round++;
         ResetBoardOnly();
-        UpdateTurnUI();
         endText.text = $"Rodada {round}";
 
-        if (!turnX && GameSettings.Instance.PlayAgainstAI == true)
+        if (!turnX && isVsAI)
             Invoke(nameof(PlayAI), 0.5f);
     }
 
@@ -231,19 +225,13 @@ public class GameController : MonoBehaviour
         board = new string[9];
         gameOver = false;
 
-        for (int i = 0; i < cellImages.Count; i++)
+        for (int i = 0; i < symbolImages.Count; i++)
         {
-            cellImages[i].sprite = null;
-            Button button = cellImages[i].transform.parent.GetComponent<Button>();
+            symbolImages[i].sprite = null;
+            Button button = symbolImages[i].transform.parent.GetComponent<Button>();
             if (button != null)
                 button.interactable = true;
         }
-    }
-
-    private void UpdateTurnUI()
-    {
-        labelX.text = turnX ? "<--" : "";
-        labelO.text = !turnX ? "<--" : "";
     }
 
     private bool CheckWin(string player)
@@ -291,7 +279,6 @@ public class GameController : MonoBehaviour
 
         ResetBoardOnly();
         UpdateScoreUI();
-        UpdateTurnUI();
         endText.text = "";
         restartButton.gameObject.SetActive(true);
 
@@ -301,7 +288,6 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        // Carrega configurações do GameSettings, se disponíveis
         if (GameSettings.Instance != null)
         {
             isVsAI = GameSettings.Instance.PlayAgainstAI == true;
@@ -309,19 +295,16 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            // fallback para testes direto no editor
             isVsAI = true;
             aiDifficulty = GameSettings.Difficulty.Medium;
         }
 
-        UpdateTurnUI();
         UpdateScoreUI();
         restartButton.gameObject.SetActive(true);
 
         if (!turnX && GameSettings.Instance.PlayAgainstAI == true)
             Invoke(nameof(PlayAI), 0.5f);
     }
-
 
     private void HighlightWinner(string player)
     {
