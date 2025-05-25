@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
     public Sprite xSprite;
     public Sprite oSprite;
-    public List<Image> symbolImages; // imagem interna (X ou O)
+    public List<Image> symbolImages;
 
     public TMP_Text endText;
     public TMP_Text scoreTextX;
@@ -308,6 +308,5 @@ public class GameController : MonoBehaviour
 
     private void HighlightWinner(string player)
     {
-        // efeito visual opcional
     }
 }

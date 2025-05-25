@@ -8,7 +8,7 @@ public class MenuManager : MonoBehaviour
     public Button vsAIButton, vsPlayerButton;
     public Button startButton;
 
-    public GameObject difficultyPanel; // <- atribua no Inspector (Painel dos 3 botões de dificuldade)
+    public GameObject difficultyPanel;
 
     private void Start()
     {
@@ -23,8 +23,8 @@ public class MenuManager : MonoBehaviour
 
         startButton.onClick.AddListener(() => SceneManager.LoadScene("SampleScene"));
 
-        difficultyPanel.SetActive(false); // oculta no início
-        startButton.gameObject.SetActive(false); // desativa no início
+        difficultyPanel.SetActive(false);
+        startButton.gameObject.SetActive(false);
 
         UpdateUI();
     }
@@ -39,8 +39,8 @@ public class MenuManager : MonoBehaviour
     void SetMode(bool isAI)
     {
         GameSettings.Instance.PlayAgainstAI = isAI;
-        difficultyPanel.SetActive(isAI); // mostra dificuldade só se for contra IA
-        GameSettings.Instance.SelectedDifficulty = GameSettings.Difficulty.None; // reset
+        difficultyPanel.SetActive(isAI);
+        GameSettings.Instance.SelectedDifficulty = GameSettings.Difficulty.None;
 
         UpdateModeButtons();
         UpdateDifficultyButtons();

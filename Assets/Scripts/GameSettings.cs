@@ -13,11 +13,11 @@ public class GameSettings : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Mantém entre cenas
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Evita duplicatas
+            Destroy(gameObject);
         }
     }
 }
